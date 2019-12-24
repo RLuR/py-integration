@@ -20,8 +20,7 @@ def riemann_integrate(function, iterations, lower_boundry, upper_boundry):
     results = function_array(steps)
     return np.mean(results) * (upper_boundry - lower_boundry)
 
-def monte_carlo_integrate(function, iterations, lower_boundry, upper_boundry):
-    min_height, max_height = _generate_y_boundries(function, lower_boundry, iterations)
+def monte_carlo_integrate(function, iterations, lower_boundry, upper_boundry, min_height, max_height):
     results = 0
 
     for step in range(1, iterations):
@@ -31,9 +30,11 @@ def monte_carlo_integrate(function, iterations, lower_boundry, upper_boundry):
             results += 1
 
     minresult = (upper_boundry - lower_boundry) * (min_height)
+    return minresult + (upper_boundry - lower_boundry) * (max_height - min_height) * results / iterations
 
-
-    return minresult + (upper_boundry - lower_boundry) * (max_height - min_height) *results/iterations
+def monte_carlo_integrate(function, iterations, lower_boundry, upper_boundry):
+    min_height, max_height = _generate_y_boundries(function, lower_boundry, upper_boundry, iterations)
+    return monte_carlo_integrate(function, iterations, lower_boundry, upper_boundry, min_height, max_height)
 
 def _generate_random_point(lower_boundry, upper_boundry, min_height, max_height):
     return [random.uniform(lower_boundry,upper_boundry), random.uniform(min_height, max_height)]
